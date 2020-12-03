@@ -36,7 +36,7 @@ connection.connect(function(err){
 
 app.get('/', function(req, res){
 	
-	var q = 'SELECT * from users';
+	var q = 'SELECT * from announce';
 
 	connection.query(q, function(error, results, fields){
 		if(error) throw error;
@@ -48,15 +48,15 @@ app.get('/', function(req, res){
 	});
 });
 
-app.get('/users', function(req, res){
-	var usersQuery = 'select id, fullName, emailAddress, city, country from users';
-	// var context = {};
-	connection.query(usersQuery, function(error, results, fields){
+app.get('/announce', function(req, res){
+	var announceQuery = 'SELECT * from announce';
+	
+	connection.query(announceQuery, function(error, results, fields){
 		if(error) throw error;
 		console.log("rendering characters page . . .");
 
-		res.render('users', {
-			title: "Users Page",
+		res.render('announce', {
+			title: "Announcement",
 			results: results
 		});
 	});
@@ -66,17 +66,17 @@ app.get('/users', function(req, res){
 /* Post routes below */
 
 
-app.post('/users', urlencodedParser,function(req, res){
+app.post('/announce', urlencodedParser,function(req, res){
 	console.log("adding a character with the following details below: ");
 	console.log(req.body);		//midware urlencodedParser is doing this
 
-	var addCharacter = 'insert into users (fullName, emailAddress, city, country) VALUES (?, ?, ?, ?)';
-	var inserts = [req.body.fullName, req.body.emailAddress, req.body.city, req.body.country];
+	var addannounce = 'insert into announce (serv_name, serv_type, `desc`, ipv4, ipv6, host, mac) VALUES (?, ?, ?, ?, ?, ?, ?)';
+	var inserts = [req.body.serv_name, req.body.serv_type, req.body.desc, req.body.ipv4, req.body.ipv6, req.body.host, req.body.mac];
 
-	connection.query(addCharacter, inserts, function(error, results, fields){
+	connection.query(addannounce, inserts, function(error, results, fields){
 		if (error) throw error;
 
-		res.redirect('users');
+		res.redirect('announce');
 	});
 });
 

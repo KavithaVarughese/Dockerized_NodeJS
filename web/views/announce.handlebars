@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+
+<div class="container">
+    <p></p>
+    <h1> {{title}} </h1>
+
+    <h5><a href="/">Go back to the home page</a></h5>
+
+    <p></p>
+
+    <h4>Get Announce Byte Buffer</h4>
+
+	<div class="box">
+        <div class="subtitle is-5"></div>
+        <form id="announcebuffer" action="/announce" method="post">
+
+            
+            <div class="field">
+                <label class="label">Service Name</label>
+                <input class="input" type="text" name="serv_name" placeholder="rasspb170_1-airplay-srv-host">
+            </div>
+
+             
+            <div class="field">
+                <label class="label">Service Type</label>
+                <input class="input" type="text" name="serv_type" placeholder="_airplay._tcp">
+            </div>
+
+            
+            <div class="field">
+                <label class="label">Description</label>
+                <input class="input" type="text" name="desc" placeholder="">
+            </div>
+
+            
+            <div class="field">
+                <label class="label">IPv4 Address</label>
+                <input class="input" type="text" name="ipv4" placeholder="">
+            </div>
+            
+            
+            <div class="field">
+                <label class="label">IPv6 Address</label>
+                <input class="input" type="text" name="ipv6" placeholder="">
+            </div>
+            
+            <div class="field">
+                <label class="label">Host Id</label>
+                <input class="input" type="text" name="host" placeholder="snoopsxox-VirtualBot">
+            </div>
+            
+            <div class="field">
+                <label class="label">MAC Address</label>
+                <input class="input" type="text" name="mac" placeholder="snoopsxox-VirtualBot">
+            </div>
+
+
+            <!-- Submit -->
+            <div class="field">
+                <input class="button is-info" type="submit" value="Submit">
+            </div>
+
+        </form>  
+    </div>
+</div>
+
+<p></p>
+
+<div class="container">
+    <table class="table is-bordered is-striped is-fullwidth table-striped">
+        <thead class="thead-dark">
+            <th>ID</th> 
+            <th>Service Name</th> 
+            <th>Service Type</th> 
+            <th>Description</th>
+            <th>Ipv4 Address</th>
+            <th>Ipv6 Address</th>
+            <th>Host Id</th>  
+            <th>MAC Address</th>
+            <th>Byte Buffer</th>
+            
+        </thead> 
+        <tbody> 
+            {{#each results}} 
+            <tr> 
+                <td>{{this.id}}</td>
+                <td>{{this.serv_name}}</td> 
+                <td>{{this.serv_type}}</td> 
+                <td>{{this.desc}}</td> 
+                <td>{{this.ipv4}}</td>
+                <td>{{this.ipv6}}</td>
+                <td>{{this.host}}</td>
+                <td>{{this.mac}}</td>
+                <td>{{this.byte_buffer}}</td>
+            </tr> 
+            {{/each}} 
+        </tbody> 
+    </table> 
+</div>
