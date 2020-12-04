@@ -7,6 +7,12 @@ CREATE TABLE `announce`(
 	`ipv6` varchar(255) DEFAULT NULL,
 	`host` varchar(255) DEFAULT NULL,
 	`mac` varchar(255) DEFAULT NULL,
-	`ttl` int(20) DEFAULT 4500,
+	`ttl` int(20) NOT NULL,
+	`byte_buffer` varchar(255) DEFAULT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `browse`(
+	`id` int(10) UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	`serv_type` varchar(255) DEFAULT NULL,
 	`byte_buffer` varchar(255) DEFAULT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;

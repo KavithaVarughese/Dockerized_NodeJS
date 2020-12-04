@@ -42,7 +42,7 @@ app.get('/', function(req, res){
 		if(error) throw error;
 		console.log("rendering home page . . .");
 		res.render('home', {
-			title: "Testing",
+			title: "Traffic Generator Home Page",
 			results: results,
 		});
 	});
@@ -69,15 +69,27 @@ app.get('/announce', function(req, res){
 app.post('/announce', urlencodedParser,function(req, res){
 	console.log("adding a character with the following details below: ");
 	console.log(req.body);		//midware urlencodedParser is doing this
+	var announceExists = 'select * from announce where serv_name = ? and serv_type = ? and `desc` = ? and ipv4 = ? and ipv6 = ? and host = ? and mac = ? and ttl = ?';
+	var checks = [req.body.serv_name, req.body.serv_type, req.body.desc, req.body.ipv4, req.body.ipv6, req.body.host, req.body.mac, 4500];
 
-	var addannounce = 'insert into announce (serv_name, serv_type, `desc`, ipv4, ipv6, host, mac) VALUES (?, ?, ?, ?, ?, ?, ?)';
-	var inserts = [req.body.serv_name, req.body.serv_type, req.body.desc, req.body.ipv4, req.body.ipv6, req.body.host, req.body.mac];
-
-	connection.query(addannounce, inserts, function(error, results, fields){
+	connection.query(announceExists, checks, function(error, result, fields){
 		if (error) throw error;
-
-		res.redirect('announce');
-	});
+		if (result.length == 0){
+			
+			console.log("Test"+result.length+"and"+result);
+			
+			var addannounce = 'insert into announce (serv_name, serv_type, `desc`, ipv4, ipv6, host, mac, ttl) VALUES (?, ?, ?, ?, ?, ?, ?, 4500)';
+			var inserts = [req.body.serv_name, req.body.serv_type, req.body.desc, req.body.ipv4, req.body.ipv6, req.body.host, req.body.mac];
+			
+			connection.query(addannounce, inserts, function(error, results, fields){
+				if (error) throw error;
+				
+				res.redirect('announce');	
+			});
+		}
+		else
+			res.redirect('announce');
+	});	
 });
 
 /* Port and listening info below */
