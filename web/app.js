@@ -53,10 +53,25 @@ app.get('/announce', function(req, res){
 	
 	connection.query(announceQuery, function(error, results, fields){
 		if(error) throw error;
-		console.log("rendering characters page . . .");
+		console.log("rendering announcement page . . .");
 
 		res.render('announce', {
 			title: "Announcement",
+			results: results
+		});
+	});
+});
+
+app.get('/browse', function(req,res){
+	var browseQuery = 'SELECT * from browse';
+
+	connection.query(browseQuery, function(error, results, fields){
+		if(error) throw error;
+
+		console.log("rendering browse page . . .");
+
+		res.render('browse', {
+			title: "Browse",
 			results: results
 		});
 	});
@@ -67,19 +82,27 @@ app.get('/announce', function(req, res){
 
 
 app.post('/announce', urlencodedParser,function(req, res){
-	console.log("adding a character with the following details below: ");
+	console.log("adding a announcement packet ");
 	console.log(req.body);		//midware urlencodedParser is doing this
-	var announceExists = 'select * from announce where serv_name = ? and serv_type = ? and `desc` = ? and ipv4 = ? and ipv6 = ? and host = ? and mac = ? and ttl = ?';
-	var checks = [req.body.serv_name, req.body.serv_type, req.body.desc, req.body.ipv4, req.body.ipv6, req.body.host, req.body.mac, 4500];
 
-	connection.query(announceExists, checks, function(error, result, fields){
+	//Creating SHA-1 Hash
+	var str = req.body.serv_name+"_"+req.body.serv_type+"_"+req.body.desc+"_"+req.body.ipv4+"_"+req.body.ipv6+"_"+req.body.host+"_"+req.body.mac+"_"+"4500";
+	var crypto = require('crypto')
+	var shasum = crypto.createHash('sha1')
+	shasum.update(str)
+	var hash = shasum.digest('hex')
+
+	var announceExists = 'select * from announce where hash = ?';
+
+	connection.query(announceExists, hash, function(error, result, fields){
 		if (error) throw error;
+		//Check if the record already exists
 		if (result.length == 0){
 			
 			console.log("Test"+result.length+"and"+result);
 			
-			var addannounce = 'insert into announce (serv_name, serv_type, `desc`, ipv4, ipv6, host, mac, ttl) VALUES (?, ?, ?, ?, ?, ?, ?, 4500)';
-			var inserts = [req.body.serv_name, req.body.serv_type, req.body.desc, req.body.ipv4, req.body.ipv6, req.body.host, req.body.mac];
+			var addannounce = 'insert into announce (serv_name, serv_type, `desc`, ipv4, ipv6, host, mac, ttl, hash) VALUES (?, ?, ?, ?, ?, ?, ?, 4500, ?)';
+			var inserts = [req.body.serv_name, req.body.serv_type, req.body.desc, req.body.ipv4, req.body.ipv6, req.body.host, req.body.mac, hash];
 			
 			connection.query(addannounce, inserts, function(error, results, fields){
 				if (error) throw error;
@@ -92,6 +115,31 @@ app.post('/announce', urlencodedParser,function(req, res){
 	});	
 });
 
+app.post('/browse', urlencodedParser,function(req, res){
+	console.log("adding a browse packet ");
+	console.log(req.body);		//midware urlencodedParser is doing this
+	var browseExists = 'select * from browse where serv_type = ?';
+	var checks = [req.body.serv_type];
+
+	connection.query(browseExists, checks, function(error, result, fields){
+		if (error) throw error;
+		if (result.length == 0){
+			
+			console.log("Test"+result.length+"and"+result);
+			
+			var addbrowse = 'insert into browse (serv_type) VALUES (?)';
+			var inserts = [req.body.serv_type];
+			
+			connection.query(addbrowse, inserts, function(error, results, fields){
+				if (error) throw error;
+				
+				res.redirect('browse');	
+			});
+		}
+		else
+			res.redirect('browse');
+	});	
+});
 /* Port and listening info below */
 /* might want to set up argv for easily changing the port */
 var port = 3257;
