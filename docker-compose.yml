@@ -9,6 +9,14 @@ services:
       MYSQL_USER: mysql
       MYSQL_PASSWORD: supersecret
       DATABASE_HOST: db
+
+
+  avahi:
+    build: ./avahi_daemon
+    depends_on:
+      - db
+
+
   web:
     build: ./web
     environment:
@@ -21,4 +29,8 @@ services:
       - "3257:3257"
     depends_on:
       - db
+      - avahi
     restart: on-failure 
+
+
+  

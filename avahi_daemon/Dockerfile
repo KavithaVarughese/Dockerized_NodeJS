@@ -1,5 +1,5 @@
 FROM ubuntu:18.04
-WORKDIR /usr/src/app
+WORKDIR /avahi-daemon
 RUN set -ex && apt-get update 
 
 ## for apt to be noninteractive
@@ -28,6 +28,7 @@ RUN apt-get install -y git \
     expat \
     libgdbm-dev \
     libdaemon-dev \
+    libmysqlclient-dev \
     doxygen \
     gtk+2.0 \
     mono-mcs \
@@ -40,19 +41,15 @@ RUN apt-get install -y git \
     pkg-config \
     libevent-dev \
     systemd \
-    nano \
-    npm
-COPY package*.json ./
-RUN npm install
+    nano
 COPY . .
-WORKDIR /usr/src/app/avahi
+WORKDIR /avahi-daemon/avahi
 RUN ./autogen.sh --disable-python
 RUN ./configure --sysconfdir=/etc --localstatedir=/var --disable-python
 RUN make && make install
 RUN ldconfig
 RUN addgroup --system avahi
 RUN adduser --system --no-create-home --ingroup avahi avahi
-WORKDIR /usr/src/app
+WORKDIR /avahi-daemon
 ENTRYPOINT [ "bash", "./entrypoint.sh" ]
-CMD ["npm", "start"]
-#CMD [ "/bin/bash" ]
+CMD [ "/bin/bash" ]
