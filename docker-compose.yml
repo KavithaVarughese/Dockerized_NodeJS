@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 
 services:
   db:
@@ -9,13 +9,19 @@ services:
       MYSQL_USER: mysql
       MYSQL_PASSWORD: supersecret
       DATABASE_HOST: db
-
+    networks:
+      web_net:
+        ipv4_address: 172.22.0.2
+        ipv6_address: 2001:3984:3989::10
 
   avahi:
     build: ./avahi_daemon
     depends_on:
       - db
-
+    networks:
+      web_net:
+        ipv4_address: 172.22.0.3
+        ipv6_address: 2001:3984:3989::11
 
   web:
     build: ./web
@@ -30,7 +36,24 @@ services:
     depends_on:
       - db
       - avahi
-    restart: on-failure 
+    networks:
+      web_net:
+        ipv4_address: 172.22.0.4
+        ipv6_address: 2001:3984:3989::9
+    restart: on-failure
+
+networks:
+  web_net:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.22.0.0/24
+      - subnet: 2001:3984:3989::/64
+        
+
+
 
 
   
