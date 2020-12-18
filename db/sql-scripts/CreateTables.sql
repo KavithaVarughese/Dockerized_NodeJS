@@ -9,7 +9,7 @@ CREATE TABLE `announce`(
 	`mac` varchar(255) DEFAULT NULL,
 	`ttl` int(20) NOT NULL,
 	`hash` varchar(255) NOT NULL,
-	`byte_buffer` varchar(255) DEFAULT NULL
+	`byte_buffer` varchar(1024) DEFAULT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `browse`(
@@ -18,3 +18,24 @@ CREATE TABLE `browse`(
 	`byte_buffer` varchar(255) DEFAULT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+CREATE TABLE `sdg`(
+	`id` int(10) UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	`ipv4` varchar(255) DEFAULT NULL,
+	`ipv6` varchar(255) DEFAULT NULL,
+	`v4_mask` varchar(255) DEFAULT NULL,
+	`v6_mask` varchar(255) DEFAULT NULL,
+	`peer_id` varchar(255) DEFAULT NULL,
+	`vni_id` varchar(255) DEFAULT NULL,
+	`vlan_id` varchar(255) DEFAULT NULL,
+	`v4_subnet` int(20) NOT NULL,
+	`v6_subnet` varchar(255) NOT NULL,
+	`hash` varchar(255) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `action`(
+	`id` int(10) UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	`name` varchar(255),
+	`sdg_hash` varchar(255),
+	`packet_hash` varchar(255)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
